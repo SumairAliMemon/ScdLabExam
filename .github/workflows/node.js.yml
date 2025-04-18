@@ -18,4 +18,4 @@ jobs:
 
     - name: Build and start containers
       run: |
-        docker-compose -f Lab_Sessional/Cafe_Management_System/docker-compose.yml up --build -d
+        docker-compose -f Cafe_Management_System/docker-compose.yml up --build -d
