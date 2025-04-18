@@ -1,0 +1,98 @@
+version: '3.8'
+
+networks:
+  cafe-network:
+    driver: bridge
+
+services:
+  api-gateway:
+    build:
+      context: ./api-gateway
+      dockerfile: DockerFile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - menu-service
+      - order-service
+      - payment-service
+      - inventory-service
+      - customer-service
+    networks:
+      - cafe-network
+
+  menu-service:
+    build:
+      context: ./menu-services
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+    depends_on:
+      - mongodb
+    environment:
+      - MONGO_URL=mongodb://mongodb:27017/cafe
+    networks:
+      - cafe-network
+
+  order-service:
+    build:
+      context: ./order-services
+      dockerfile: Dockerfile
+    ports:
+      - "3002:3002"
+    depends_on:
+      - mongodb
+    environment:
+      - MONGO_URL=mongodb://mongodb:27017/cafe
+    networks:
+      - cafe-network
+
+  payment-service:
+    build:
+      context: ./payment-services
+      dockerfile: Dockerfile
+    ports:
+      - "3003:3003"
+    depends_on:
+      - mongodb
+    environment:
+      - MONGO_URL=mongodb://mongodb:27017/cafe
+    networks:
+      - cafe-network
+
+  inventory-service:
+    build:
+      context: ./inventory-services
+      dockerfile: Dockerfile
+    ports:
+      - "3004:3004"
+    depends_on:
+      - mongodb
+    environment:
+      - MONGO_URL=mongodb://mongodb:27017/cafe
+    networks:
+      - cafe-network
+
+  customer-service:
+    build:
+      context: ./customer-services
+      dockerfile: Dockerfile
+    ports:
+      - "3005:3005"
+    depends_on:
+      - mongodb
+    environment:
+      - MONGO_URL=mongodb://mongodb:27017/cafe
+    networks:
+      - cafe-network
+
+  mongodb:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - cafe-network
+
+volumes:
+  mongo-data:
